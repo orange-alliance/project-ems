@@ -306,7 +306,7 @@ const MonitorCard: FC<MonitorCardProps> = ({
                 variant={'contained'}
                 color={'error'}
                 href={`${webUrl}/${match?.eventKey}/referee/red`}
-                disabled={match === undefined}
+                disabled={!match}
                 fullWidth
               >
                 Red Referee
@@ -316,7 +316,7 @@ const MonitorCard: FC<MonitorCardProps> = ({
               <Button
                 variant={'contained'}
                 href={`${webUrl}/${match?.eventKey}/referee/head`}
-                disabled={match === undefined}
+                disabled={!match}
                 fullWidth
               >
                 Head Referee
@@ -327,7 +327,7 @@ const MonitorCard: FC<MonitorCardProps> = ({
                 variant={'contained'}
                 color={'info'}
                 href={`${webUrl}/${match?.eventKey}/referee/blue`}
-                disabled={match === undefined}
+                disabled={!match}
                 fullWidth
               >
                 Blue Referee
