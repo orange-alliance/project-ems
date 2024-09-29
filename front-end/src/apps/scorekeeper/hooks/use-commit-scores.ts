@@ -2,6 +2,7 @@ import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { useMatchControl } from './use-match-control';
 import {
   MatchState,
+  QUALIFICATION_LEVEL,
   RESULT_BLUE_WIN,
   RESULT_NOT_PLAYED,
   RESULT_RED_WIN,
@@ -23,8 +24,10 @@ import {
 } from 'src/api/use-ranking-data';
 import { sendCommitScores } from 'src/api/use-socket';
 import { useSeasonFieldControl } from 'src/hooks/use-season-components';
+import { useCurrentTournament } from 'src/api/use-tournament-data';
 
 export const useCommitScoresCallback = () => {
+  const tournament = useCurrentTournament();
   const { canCommitScores, setState } = useMatchControl();
   const fieldControl = useSeasonFieldControl();
   const eventKey = useRecoilValue(currentEventKeyAtom);
@@ -47,6 +50,11 @@ export const useCommitScoresCallback = () => {
         }
         if (!match) {
           throw new Error('Attempted to commit scores when there is no match.');
+        }
+        if (!tournament) {
+          throw new Error(
+            'Attemped to commit scores when there is no current tournament.'
+          );
         }
         const pending = { ...match, details: { ...match.details } };
         // Update the result if it hasn't been set yet
@@ -73,7 +81,7 @@ export const useCommitScoresCallback = () => {
 
         await patchWholeMatch(pending);
         // TODO - When to calculate rankings vs. playoff rankings?
-        if (tournamentKey === 't3' || tournamentKey === 't4') {
+        if (tournament.tournamentLevel > QUALIFICATION_LEVEL) {
           await recalculatePlayoffsRankings(eventKey, tournamentKey);
         } else {
           await recalculateRankings(eventKey, tournamentKey);
