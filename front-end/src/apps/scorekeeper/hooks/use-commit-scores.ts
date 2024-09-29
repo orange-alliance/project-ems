@@ -80,7 +80,6 @@ export const useCommitScoresCallback = () => {
         }
 
         await patchWholeMatch(pending);
-        // TODO - When to calculate rankings vs. playoff rankings?
         if (tournament.tournamentLevel > QUALIFICATION_LEVEL) {
           await recalculatePlayoffsRankings(eventKey, tournamentKey);
         } else {
